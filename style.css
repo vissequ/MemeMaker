@@ -1,0 +1,84 @@
+/* App Styles */
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background-color: #282c34;
+    color: #ffffff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    overflow: hidden;
+}
+
+/* Upload Area */
+#upload-area {
+    padding: 20px;
+    border: 2px dashed #ccc;
+    border-radius: 10px;
+    text-align: center;
+    background-color: #444;
+    cursor: pointer;
+    color: #fff;
+    transition: border-color 0.3s;
+}
+
+#upload-area:hover {
+    border-color: #007bff;
+}
+
+#upload-area p {
+    margin: 0;
+    padding: 10px;
+    font-size: 16px;
+}
+
+/* App Container */
+#app {
+    text-align: center;
+    z-index: 1;
+}
+
+/* Canvas */
+#canvas {
+    border: 1px solid #fff;
+    margin-top: 20px;
+    background-color: #000;
+}
+
+/* Controls */
+h3 {
+    margin-top: 20px;
+}
+
+button {
+    margin-top: 20px;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    background-color: #007bff;
+    color: #fff;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #0056b3;
+}
+
+input[type="text"],
+input[type="color"],
+input[type="number"],
+select {
+    margin-top: 10px;
+    padding: 5px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 14px;
+}
+
+label {
+    margin: 10px;
+    font-size: 14px;
+    color: #fff;
+}

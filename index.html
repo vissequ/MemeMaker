@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Meme Editor</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div id="app">
+        <!-- New Image Button (Hidden Initially) -->
+        <button id="new-image-btn" style="display: none;">Make New Image</button>
+
+        <!-- Upload Area -->
+        <div id="upload-area">
+            <input type="file" id="image-upload" accept="image/*" hidden>
+            <p>Drop an image or click to upload</p>
+        </div>
+
+        <!-- Canvas Container (Hidden Initially) -->
+        <div id="canvas-container" style="display: none;">
+            <canvas id="canvas"></canvas>
+        </div>
+
+        <!-- Controls for Line 1 -->
+        <div id="line1-controls" style="display: none;">
+            <h3>Line 1</h3>
+            <input type="text" id="text-input-1" placeholder="Enter Line 1 text">
+            <input type="color" id="color-picker-1" value="#FFFFFF">
+            <select id="font-selector-1">
+                <option value="Impact">Impact</option>
+            </select>
+            <input type="number" id="font-size-1" min="10" value="42">
+            <label>
+                <input type="checkbox" id="case-toggle-1">
+                UPPERCASE
+            </label>
+            <label>
+                <input type="checkbox" id="outline-toggle-1">
+                Outline
+            </label>
+            <input type="color" id="outline-color-picker-1" value="#000000" style="display: none;">
+        </div>
+
+        <!-- Controls for Line 2 -->
+        <div id="line2-controls" style="display: none;">
+            <h3>Line 2</h3>
+            <input type="text" id="text-input-2" placeholder="Enter Line 2 text">
+            <input type="color" id="color-picker-2" value="#FFFFFF">
+            <select id="font-selector-2">
+                <option value="Impact">Impact</option>
+            </select>
+            <input type="number" id="font-size-2" min="10" value="42">
+            <label>
+                <input type="checkbox" id="case-toggle-2">
+                UPPERCASE
+            </label>
+            <label>
+                <input type="checkbox" id="outline-toggle-2">
+                Outline
+            </label>
+            <input type="color" id="outline-color-picker-2" value="#000000" style="display: none;">
+        </div>
+
+        <!-- Download Button (Hidden Initially) -->
+        <button id="download-btn" style="display: none;">Download as GIF</button>
+    </div>
+
+    <!-- JavaScript -->
+    <script src="https://cdn.jsdelivr.net/npm/gif.js/dist/gif.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/gif.js/dist/gif.worker.js"></script>    
+    <script src="script.js"></script>
+</body>
+</html>
