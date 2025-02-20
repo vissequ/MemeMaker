@@ -26,43 +26,35 @@ const newImageBtn = document.getElementById('new-image-btn');
 let image = null;
 let draggingLine = null;
 
-// Updated default settings
 let textData = {
     line1: {
         text: 'LINE 1 EXAMPLE',
         x: 50,
         y: 100,
-        color: '#FFFFFF', // White font
+        color: '#FFFFFF',
         font: 'Impact',
         size: 60,
         uppercase: true,
-        outline: true, // Outline enabled
-        outlineColor: '#000000', // Black outline
+        outline: true,
+        outlineColor: '#000000',
     },
     line2: {
         text: 'LINE 2 EXAMPLE',
         x: 50,
         y: 200,
-        color: '#FFFFFF', // White font
+        color: '#FFFFFF',
         font: 'Impact',
         size: 60,
         uppercase: true,
-        outline: true, // Outline enabled
-        outlineColor: '#000000', // Black outline
+        outline: true,
+        outlineColor: '#000000',
     },
 };
 
-// Populate font options for both lines
+// Populate font options
 const fontOptions = [
-    'Impact',
-    'Arial',
-    'Comic Sans MS',
-    'Courier New',
-    'Georgia',
-    'Tahoma',
-    'Times New Roman',
-    'Trebuchet MS',
-    'Verdana',
+    'Impact', 'Arial', 'Comic Sans MS', 'Courier New', 
+    'Georgia', 'Tahoma', 'Times New Roman', 'Trebuchet MS', 'Verdana'
 ];
 function populateFontSelector(selector) {
     fontOptions.forEach((font) => {
@@ -75,7 +67,7 @@ function populateFontSelector(selector) {
 populateFontSelector(fontSelector1);
 populateFontSelector(fontSelector2);
 
-// Set default values in the controls
+// Set default values
 function setDefaultControlValues() {
     fontSelector1.value = 'Impact';
     fontSelector2.value = 'Impact';
@@ -94,7 +86,7 @@ function setDefaultControlValues() {
 }
 setDefaultControlValues();
 
-// Show canvas and controls once an image is uploaded
+// Show canvas and controls
 function showCanvasAndControls() {
     canvasContainer.style.display = 'block';
     line1Controls.style.display = 'block';
@@ -104,7 +96,7 @@ function showCanvasAndControls() {
     newImageBtn.style.display = 'block';
 }
 
-// Reset the editor for a new image
+// Reset editor
 function resetEditor() {
     image = null;
     ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -149,7 +141,6 @@ function loadImage(file) {
 function drawCanvas() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-    // Draw the image
     if (image) {
         const aspectRatio = image.width / image.height;
         if (image.width > image.height) {
@@ -162,31 +153,28 @@ function drawCanvas() {
         ctx.drawImage(image, 0, 0, canvas.width, canvas.height);
     }
 
-    // Draw the text lines
     drawTextLine(textData.line1);
     drawTextLine(textData.line2);
 }
 
-// Draw text line
+// Draw text
 function drawTextLine(line) {
     if (line.text.trim()) {
         ctx.font = `${line.size}px ${line.font}`;
         const displayText = line.uppercase ? line.text.toUpperCase() : line.text;
 
-        // Draw outline first
         if (line.outline) {
             ctx.strokeStyle = line.outlineColor;
             ctx.lineWidth = 4;
             ctx.strokeText(displayText, line.x, line.y);
         }
 
-        // Fill text color
         ctx.fillStyle = line.color;
         ctx.fillText(displayText, line.x, line.y);
     }
 }
 
-// Event listeners for live updates
+// Live update listeners
 function addLiveUpdateListeners(lineKey, textInput, fontSelector, fontSizeInput, colorPicker, outlineToggle, outlineColorPicker, caseToggle) {
     textInput.addEventListener('input', (e) => {
         textData[lineKey].text = e.target.value;
@@ -219,60 +207,17 @@ function addLiveUpdateListeners(lineKey, textInput, fontSelector, fontSizeInput,
     });
 }
 
-// Add live update listeners for both lines
 addLiveUpdateListeners('line1', textInput1, fontSelector1, fontSizeInput1, colorPicker1, outlineToggle1, outlineColorPicker1, caseToggle1);
 addLiveUpdateListeners('line2', textInput2, fontSelector2, fontSizeInput2, colorPicker2, outlineToggle2, outlineColorPicker2, caseToggle2);
 
-// Dragging logic for text
-canvas.addEventListener('mousedown', (e) => {
-    const rect = canvas.getBoundingClientRect();
-    const x = e.clientX - rect.left;
-    const y = e.clientY - rect.top;
-
-    if (isMouseOverText(x, y, textData.line1)) {
-        draggingLine = textData.line1;
-    } else if (isMouseOverText(x, y, textData.line2)) {
-        draggingLine = textData.line2;
-    }
-});
-canvas.addEventListener('mousemove', (e) => {
-    if (draggingLine) {
-        const rect = canvas.getBoundingClientRect();
-        draggingLine.x = e.clientX - rect.left;
-        draggingLine.y = e.clientY - rect.top;
-        drawCanvas();
-    }
-});
-canvas.addEventListener('mouseup', () => {
-    draggingLine = null;
-});
-
-function isMouseOverText(x, y, line) {
-    const textWidth = ctx.measureText(line.text).width;
-    const textHeight = line.size; // Approximate text height
-    return x > line.x && x < line.x + textWidth && y > line.y - textHeight && y < line.y;
-}
-
+// Save as JPG
 downloadBtn.addEventListener('click', () => {
-    const gif = new GIF({
-        workers: 2,
-        quality: 10,
-        workerScript: 'gif.worker.js', // Use correct path
-    });
-
-    gif.addFrame(canvas, { copy: true, delay: 500 });
-
-    gif.on('finished', (blob) => {
-        const url = URL.createObjectURL(blob);
-        const link = document.createElement('a');
-        link.href = url;
-        link.download = 'meme.gif';
-        link.click();
-    });
-
-    gif.render();
+    const imageURL = canvas.toDataURL("image/jpeg", 0.9);
+    const link = document.createElement('a');
+    link.href = imageURL;
+    link.download = 'meme.jpg';
+    link.click();
 });
 
-
-// New Image Button
+// Reset button
 newImageBtn.addEventListener('click', resetEditor);
