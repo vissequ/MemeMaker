@@ -52,10 +52,7 @@ let textData = {
 };
 
 // Populate font options
-const fontOptions = [
-    'Impact', 'Arial', 'Comic Sans MS', 'Courier New', 
-    'Georgia', 'Tahoma', 'Times New Roman', 'Trebuchet MS', 'Verdana'
-];
+const fontOptions = ['Impact', 'Arial', 'Comic Sans MS', 'Courier New', 'Georgia', 'Tahoma', 'Times New Roman', 'Trebuchet MS', 'Verdana'];
 function populateFontSelector(selector) {
     fontOptions.forEach((font) => {
         const option = document.createElement('option');
