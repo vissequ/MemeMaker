@@ -152,13 +152,12 @@ function drawCanvas() {
 
     drawTextLine(textData.line1);
     drawTextLine(textData.line2);
-    drawWatermark();
 }
 
 // Draw text
 function drawTextLine(line) {
     if (line.text.trim()) {
-        ctx.font = `${line.size}px ${line.font}`;
+        ctx.font = ${line.size}px ${line.font};
         const displayText = line.uppercase ? line.text.toUpperCase() : line.text;
 
         if (line.outline) {
@@ -172,24 +171,44 @@ function drawTextLine(line) {
     }
 }
 
-// Draw watermark
-function drawWatermark() {
-    const watermarkText = "MemeMe";
-    const fontSize = 30; // Adjust as needed
-    const margin = 20; // Padding from the edge
-    const xPos = canvas.width - 140; // Position towards the bottom-right
-    const yPos = canvas.height - margin; // Offset from the bottom
-
-    ctx.globalAlpha = 0.5; // Set transparency to 50%
-    ctx.font = `${fontSize}px Arial`;
-    ctx.fillStyle = "#FFFFFF"; // White color
-    ctx.fillText(watermarkText, xPos, yPos);
-    ctx.globalAlpha = 1.0; // Reset opacity to normal
+// Live update listeners
+function addLiveUpdateListeners(lineKey, textInput, fontSelector, fontSizeInput, colorPicker, outlineToggle, outlineColorPicker, caseToggle) {
+    textInput.addEventListener('input', (e) => {
+        textData[lineKey].text = e.target.value;
+        drawCanvas();
+    });
+    fontSelector.addEventListener('change', (e) => {
+        textData[lineKey].font = e.target.value;
+        drawCanvas();
+    });
+    fontSizeInput.addEventListener('input', (e) => {
+        textData[lineKey].size = parseInt(e.target.value, 10);
+        drawCanvas();
+    });
+    colorPicker.addEventListener('input', (e) => {
+        textData[lineKey].color = e.target.value;
+        drawCanvas();
+    });
+    outlineToggle.addEventListener('change', (e) => {
+        textData[lineKey].outline = e.target.checked;
+        outlineColorPicker.style.display = e.target.checked ? 'block' : 'none';
+        drawCanvas();
+    });
+    outlineColorPicker.addEventListener('input', (e) => {
+        textData[lineKey].outlineColor = e.target.value;
+        drawCanvas();
+    });
+    caseToggle.addEventListener('change', (e) => {
+        textData[lineKey].uppercase = e.target.checked;
+        drawCanvas();
+    });
 }
+
+addLiveUpdateListeners('line1', textInput1, fontSelector1, fontSizeInput1, colorPicker1, outlineToggle1, outlineColorPicker1, caseToggle1);
+addLiveUpdateListeners('line2', textInput2, fontSelector2, fontSizeInput2, colorPicker2, outlineToggle2, outlineColorPicker2, caseToggle2);
 
 // Save as JPG
 downloadBtn.addEventListener('click', () => {
-    drawCanvas(); // Ensure everything is redrawn before saving
     const imageURL = canvas.toDataURL("image/jpeg", 0.9);
     const link = document.createElement('a');
     link.href = imageURL;
