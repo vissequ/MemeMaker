@@ -104,7 +104,6 @@ function drawCanvas() {
 
     drawTextLine(textData.line1);
     drawTextLine(textData.line2);
-    drawWatermark(); // Ensure watermark is drawn last
 }
 
 // Draw text
@@ -122,23 +121,6 @@ function drawTextLine(line) {
         ctx.fillStyle = line.color;
         ctx.fillText(displayText, line.x, line.y);
     }
-}
-
-// Draw watermark
-function drawWatermark() {
-    const watermarkText = "MemeMe";
-    const fontSize = 30;
-    const padding = 20;
-    
-    // Position watermark at bottom-right
-    const xPos = canvas.width - ctx.measureText(watermarkText).width - padding;
-    const yPos = canvas.height - padding;
-
-    ctx.globalAlpha = 0.5; // Set transparency to 50%
-    ctx.font = `${fontSize}px Arial`;
-    ctx.fillStyle = "#FFFFFF"; // White color
-    ctx.fillText(watermarkText, xPos, yPos);
-    ctx.globalAlpha = 1.0; // Reset opacity to normal
 }
 
 // Save as JPG
