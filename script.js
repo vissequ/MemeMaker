@@ -51,63 +51,6 @@ let textData = {
     },
 };
 
-// Populate font options
-const fontOptions = ['Impact', 'Arial', 'Comic Sans MS', 'Courier New', 'Georgia', 'Tahoma', 'Times New Roman', 'Trebuchet MS', 'Verdana'];
-function populateFontSelector(selector) {
-    fontOptions.forEach((font) => {
-        const option = document.createElement('option');
-        option.value = font;
-        option.textContent = font;
-        selector.appendChild(option);
-    });
-}
-populateFontSelector(fontSelector1);
-populateFontSelector(fontSelector2);
-
-// Set default values
-function setDefaultControlValues() {
-    fontSelector1.value = 'Impact';
-    fontSelector2.value = 'Impact';
-    fontSizeInput1.value = 60;
-    fontSizeInput2.value = 60;
-    colorPicker1.value = '#FFFFFF';
-    colorPicker2.value = '#FFFFFF';
-    outlineToggle1.checked = true;
-    outlineToggle2.checked = true;
-    outlineColorPicker1.value = '#000000';
-    outlineColorPicker2.value = '#000000';
-    caseToggle1.checked = true;
-    caseToggle2.checked = true;
-    textInput1.value = 'LINE 1 EXAMPLE';
-    textInput2.value = 'LINE 2 EXAMPLE';
-}
-setDefaultControlValues();
-
-// Show canvas and controls
-function showCanvasAndControls() {
-    canvasContainer.style.display = 'block';
-    line1Controls.style.display = 'block';
-    line2Controls.style.display = 'block';
-    downloadBtn.style.display = 'block';
-    uploadArea.style.display = 'none';
-    newImageBtn.style.display = 'block';
-}
-
-// Reset editor
-function resetEditor() {
-    image = null;
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    canvasContainer.style.display = 'none';
-    line1Controls.style.display = 'none';
-    line2Controls.style.display = 'none';
-    downloadBtn.style.display = 'none';
-    newImageBtn.style.display = 'none';
-    uploadArea.style.display = 'block';
-    textData.line1 = { ...textData.line1, text: 'LINE 1 EXAMPLE' };
-    textData.line2 = { ...textData.line2, text: 'LINE 2 EXAMPLE' };
-    setDefaultControlValues();
-}
-
 // Image upload logic
 uploadArea.addEventListener('click', () => imageUpload.click());
 uploadArea.addEventListener('dragover', (e) => e.preventDefault());
@@ -134,7 +77,16 @@ function loadImage(file) {
     reader.readAsDataURL(file);
 }
 
-// Draw canvas
+function showCanvasAndControls() {
+    canvasContainer.style.display = 'block';
+    line1Controls.style.display = 'block';
+    line2Controls.style.display = 'block';
+    downloadBtn.style.display = 'block';
+    uploadArea.style.display = 'none';
+    newImageBtn.style.display = 'block';
+}
+
+// Draw the canvas
 function drawCanvas() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
@@ -157,7 +109,7 @@ function drawCanvas() {
 // Draw text
 function drawTextLine(line) {
     if (line.text.trim()) {
-        ctx.font = ${line.size}px ${line.font};
+        ctx.font = `${line.size}px ${line.font}`;
         const displayText = line.uppercase ? line.text.toUpperCase() : line.text;
 
         if (line.outline) {
@@ -171,42 +123,6 @@ function drawTextLine(line) {
     }
 }
 
-// Live update listeners
-function addLiveUpdateListeners(lineKey, textInput, fontSelector, fontSizeInput, colorPicker, outlineToggle, outlineColorPicker, caseToggle) {
-    textInput.addEventListener('input', (e) => {
-        textData[lineKey].text = e.target.value;
-        drawCanvas();
-    });
-    fontSelector.addEventListener('change', (e) => {
-        textData[lineKey].font = e.target.value;
-        drawCanvas();
-    });
-    fontSizeInput.addEventListener('input', (e) => {
-        textData[lineKey].size = parseInt(e.target.value, 10);
-        drawCanvas();
-    });
-    colorPicker.addEventListener('input', (e) => {
-        textData[lineKey].color = e.target.value;
-        drawCanvas();
-    });
-    outlineToggle.addEventListener('change', (e) => {
-        textData[lineKey].outline = e.target.checked;
-        outlineColorPicker.style.display = e.target.checked ? 'block' : 'none';
-        drawCanvas();
-    });
-    outlineColorPicker.addEventListener('input', (e) => {
-        textData[lineKey].outlineColor = e.target.value;
-        drawCanvas();
-    });
-    caseToggle.addEventListener('change', (e) => {
-        textData[lineKey].uppercase = e.target.checked;
-        drawCanvas();
-    });
-}
-
-addLiveUpdateListeners('line1', textInput1, fontSelector1, fontSizeInput1, colorPicker1, outlineToggle1, outlineColorPicker1, caseToggle1);
-addLiveUpdateListeners('line2', textInput2, fontSelector2, fontSizeInput2, colorPicker2, outlineToggle2, outlineColorPicker2, caseToggle2);
-
 // Save as JPG
 downloadBtn.addEventListener('click', () => {
     const imageURL = canvas.toDataURL("image/jpeg", 0.9);
@@ -216,5 +132,16 @@ downloadBtn.addEventListener('click', () => {
     link.click();
 });
 
-// Reset button
-newImageBtn.addEventListener('click', resetEditor);
+// Reset editor
+newImageBtn.addEventListener('click', () => {
+    image = null;
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    canvasContainer.style.display = 'none';
+    line1Controls.style.display = 'none';
+    line2Controls.style.display = 'none';
+    downloadBtn.style.display = 'none';
+    newImageBtn.style.display = 'none';
+    uploadArea.style.display = 'block';
+    textData.line1 = { ...textData.line1, text: 'LINE 1 EXAMPLE' };
+    textData.line2 = { ...textData.line2, text: 'LINE 2 EXAMPLE' };
+});
