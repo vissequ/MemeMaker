@@ -11,7 +11,7 @@
         <!-- New Image Button (Hidden Initially) -->
         <button id="new-image-btn" style="display: none;">Make New Image</button>
 
-        <!-- Upload Area --> 
+        <!-- Upload Area -->
         <div id="upload-area">
             <input type="file" id="image-upload" accept="image/*" hidden>
             <p>Drop an image or click to upload</p>
@@ -63,10 +63,12 @@
         </div>
 
         <!-- Download Button (Hidden Initially) -->
-        <button id="download-btn" style="display: none;">Download as JPG</button>
+        <button id="download-btn" style="display: none;">Download as GIF</button>
     </div>
 
     <!-- JavaScript -->
+    <script src="https://cdn.jsdelivr.net/npm/gif.js/dist/gif.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/gif.js/dist/gif.worker.js"></script>    
     <script src="script.js"></script>
 </body>
 </html>
