@@ -104,6 +104,7 @@ function drawCanvas() {
 
     drawTextLine(textData.line1);
     drawTextLine(textData.line2);
+    drawWatermark(); // Ensure watermark is drawn last
 }
 
 // Draw text
@@ -123,8 +124,26 @@ function drawTextLine(line) {
     }
 }
 
+// Draw watermark
+function drawWatermark() {
+    const watermarkText = "MemeMe";
+    const fontSize = 30;
+    const padding = 20;
+    
+    // Position watermark at bottom-right
+    const xPos = canvas.width - ctx.measureText(watermarkText).width - padding;
+    const yPos = canvas.height - padding;
+
+    ctx.globalAlpha = 0.5; // Set transparency to 50%
+    ctx.font = `${fontSize}px Arial`;
+    ctx.fillStyle = "#FFFFFF"; // White color
+    ctx.fillText(watermarkText, xPos, yPos);
+    ctx.globalAlpha = 1.0; // Reset opacity to normal
+}
+
 // Save as JPG
 downloadBtn.addEventListener('click', () => {
+    drawCanvas(); // Ensure everything is redrawn before saving
     const imageURL = canvas.toDataURL("image/jpeg", 0.9);
     const link = document.createElement('a');
     link.href = imageURL;
@@ -133,7 +152,9 @@ downloadBtn.addEventListener('click', () => {
 });
 
 // Reset editor
-newImageBtn.addEventListener('click', () => {
+newImageBtn.addEventListener('click', resetEditor);
+
+function resetEditor() {
     image = null;
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     canvasContainer.style.display = 'none';
@@ -144,4 +165,4 @@ newImageBtn.addEventListener('click', () => {
     uploadArea.style.display = 'block';
     textData.line1 = { ...textData.line1, text: 'LINE 1 EXAMPLE' };
     textData.line2 = { ...textData.line2, text: 'LINE 2 EXAMPLE' };
-});
+}
