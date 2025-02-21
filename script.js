@@ -257,7 +257,7 @@ downloadBtn.addEventListener('click', () => {
     const gif = new GIF({
         workers: 2,
         quality: 10,
-        workerScript: 'https://cdn.jsdelivr.net/npm/gif.js/dist/gif.worker.js', // Use correct path
+        workerScript: 'gif.worker.js', // Use correct path
     });
 
     gif.addFrame(canvas, { copy: true, delay: 500 });
