@@ -254,24 +254,13 @@ function isMouseOverText(x, y, line) {
 }
 
 downloadBtn.addEventListener('click', () => {
-    const gif = new GIF({
-        workers: 2,
-        quality: 10,
-        workerScript: 'gif.worker.js', // Use correct path
-    });
-
-    gif.addFrame(canvas, { copy: true, delay: 500 });
-
-    gif.on('finished', (blob) => {
-        const url = URL.createObjectURL(blob);
-        const link = document.createElement('a');
-        link.href = url;
-        link.download = 'meme.gif';
-        link.click();
-    });
-
-    gif.render();
+    const imageURL = canvas.toDataURL("image/jpeg", 0.9);
+    const link = document.createElement('a');
+    link.href = imageURL;
+    link.download = 'meme.jpg';
+    link.click();
 });
+
 
 
 // New Image Button
