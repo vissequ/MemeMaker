@@ -32,25 +32,92 @@ let textData = {
         text: 'LINE 1 EXAMPLE',
         x: 50,
         y: 100,
-        color: '#FFFFFF',
+        color: '#FFFFFF', // White font
         font: 'Impact',
         size: 60,
         uppercase: true,
-        outline: true,
-        outlineColor: '#000000',
+        outline: true, // Outline enabled
+        outlineColor: '#000000', // Black outline
     },
     line2: {
         text: 'LINE 2 EXAMPLE',
         x: 50,
         y: 200,
-        color: '#FFFFFF',
+        color: '#FFFFFF', // White font
         font: 'Impact',
         size: 60,
         uppercase: true,
-        outline: true,
-        outlineColor: '#000000',
+        outline: true, // Outline enabled
+        outlineColor: '#000000', // Black outline
     },
 };
+
+// Populate font options for both lines
+const fontOptions = [
+    'Impact',
+    'Arial',
+    'Comic Sans MS',
+    'Courier New',
+    'Georgia',
+    'Tahoma',
+    'Times New Roman',
+    'Trebuchet MS',
+    'Verdana',
+];
+function populateFontSelector(selector) {
+    fontOptions.forEach((font) => {
+        const option = document.createElement('option');
+        option.value = font;
+        option.textContent = font;
+        selector.appendChild(option);
+    });
+}
+populateFontSelector(fontSelector1);
+populateFontSelector(fontSelector2);
+
+// Set default values in the controls
+function setDefaultControlValues() {
+    fontSelector1.value = 'Impact';
+    fontSelector2.value = 'Impact';
+    fontSizeInput1.value = 60;
+    fontSizeInput2.value = 60;
+    colorPicker1.value = '#FFFFFF';
+    colorPicker2.value = '#FFFFFF';
+    outlineToggle1.checked = true;
+    outlineToggle2.checked = true;
+    outlineColorPicker1.value = '#000000';
+    outlineColorPicker2.value = '#000000';
+    caseToggle1.checked = true;
+    caseToggle2.checked = true;
+    textInput1.value = 'LINE 1 EXAMPLE';
+    textInput2.value = 'LINE 2 EXAMPLE';
+}
+setDefaultControlValues();
+
+// Show canvas and controls once an image is uploaded
+function showCanvasAndControls() {
+    canvasContainer.style.display = 'block';
+    line1Controls.style.display = 'block';
+    line2Controls.style.display = 'block';
+    downloadBtn.style.display = 'block';
+    uploadArea.style.display = 'none';
+    newImageBtn.style.display = 'block';
+}
+
+// Reset the editor for a new image
+function resetEditor() {
+    image = null;
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    canvasContainer.style.display = 'none';
+    line1Controls.style.display = 'none';
+    line2Controls.style.display = 'none';
+    downloadBtn.style.display = 'none';
+    newImageBtn.style.display = 'none';
+    uploadArea.style.display = 'block';
+    textData.line1 = { ...textData.line1, text: 'LINE 1 EXAMPLE' };
+    textData.line2 = { ...textData.line2, text: 'LINE 2 EXAMPLE' };
+    setDefaultControlValues();
+}
 
 // Image upload logic
 uploadArea.addEventListener('click', () => imageUpload.click());
@@ -78,19 +145,11 @@ function loadImage(file) {
     reader.readAsDataURL(file);
 }
 
-function showCanvasAndControls() {
-    canvasContainer.style.display = 'block';
-    line1Controls.style.display = 'block';
-    line2Controls.style.display = 'block';
-    downloadBtn.style.display = 'block';
-    uploadArea.style.display = 'none';
-    newImageBtn.style.display = 'block';
-}
-
-// Draw the canvas
+// Draw canvas
 function drawCanvas() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
+    // Draw the image
     if (image) {
         const aspectRatio = image.width / image.height;
         if (image.width > image.height) {
@@ -103,83 +162,106 @@ function drawCanvas() {
         ctx.drawImage(image, 0, 0, canvas.width, canvas.height);
     }
 
+    // Draw the text lines
     drawTextLine(textData.line1);
     drawTextLine(textData.line2);
 }
 
-// Draw text
+// Draw text line
 function drawTextLine(line) {
     if (line.text.trim()) {
         ctx.font = `${line.size}px ${line.font}`;
         const displayText = line.uppercase ? line.text.toUpperCase() : line.text;
 
+        // Draw outline first
         if (line.outline) {
             ctx.strokeStyle = line.outlineColor;
             ctx.lineWidth = 4;
             ctx.strokeText(displayText, line.x, line.y);
         }
 
+        // Fill text color
         ctx.fillStyle = line.color;
         ctx.fillText(displayText, line.x, line.y);
     }
 }
 
-// ✅ Function to draw the watermark ONLY on the downloaded image
-function drawWatermark() {
-    const watermarkText = "@connorfabiano";
-    const fontSize = 30;
-    const padding = 20;
-
-    ctx.font = `${fontSize}px Arial`;
-    ctx.fillStyle = "rgba(255, 255, 255, 0.5)"; // ✅ White text with 50% transparency
-
-    const textWidth = ctx.measureText(watermarkText).width;
-    const xPos = canvas.width - textWidth - padding; // Bottom-right corner
-    const yPos = canvas.height - padding;
-
-    ctx.fillText(watermarkText, xPos, yPos);
+// Event listeners for live updates
+function addLiveUpdateListeners(lineKey, textInput, fontSelector, fontSizeInput, colorPicker, outlineToggle, outlineColorPicker, caseToggle) {
+    textInput.addEventListener('input', (e) => {
+        textData[lineKey].text = e.target.value;
+        drawCanvas();
+    });
+    fontSelector.addEventListener('change', (e) => {
+        textData[lineKey].font = e.target.value;
+        drawCanvas();
+    });
+    fontSizeInput.addEventListener('input', (e) => {
+        textData[lineKey].size = parseInt(e.target.value, 10);
+        drawCanvas();
+    });
+    colorPicker.addEventListener('input', (e) => {
+        textData[lineKey].color = e.target.value;
+        drawCanvas();
+    });
+    outlineToggle.addEventListener('change', (e) => {
+        textData[lineKey].outline = e.target.checked;
+        outlineColorPicker.style.display = e.target.checked ? 'block' : 'none';
+        drawCanvas();
+    });
+    outlineColorPicker.addEventListener('input', (e) => {
+        textData[lineKey].outlineColor = e.target.value;
+        drawCanvas();
+    });
+    caseToggle.addEventListener('change', (e) => {
+        textData[lineKey].uppercase = e.target.checked;
+        drawCanvas();
+    });
 }
 
-// ✅ Save as JPG with watermark
+// Add live update listeners for both lines
+addLiveUpdateListeners('line1', textInput1, fontSelector1, fontSizeInput1, colorPicker1, outlineToggle1, outlineColorPicker1, caseToggle1);
+addLiveUpdateListeners('line2', textInput2, fontSelector2, fontSizeInput2, colorPicker2, outlineToggle2, outlineColorPicker2, caseToggle2);
+
+// Dragging logic for text
+canvas.addEventListener('mousedown', (e) => {
+    const rect = canvas.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+
+    if (isMouseOverText(x, y, textData.line1)) {
+        draggingLine = textData.line1;
+    } else if (isMouseOverText(x, y, textData.line2)) {
+        draggingLine = textData.line2;
+    }
+});
+canvas.addEventListener('mousemove', (e) => {
+    if (draggingLine) {
+        const rect = canvas.getBoundingClientRect();
+        draggingLine.x = e.clientX - rect.left;
+        draggingLine.y = e.clientY - rect.top;
+        drawCanvas();
+    }
+});
+canvas.addEventListener('mouseup', () => {
+    draggingLine = null;
+});
+
+function isMouseOverText(x, y, line) {
+    const textWidth = ctx.measureText(line.text).width;
+    const textHeight = line.size; // Approximate text height
+    return x > line.x && x < line.x + textWidth && y > line.y - textHeight && y < line.y;
+}
+
 downloadBtn.addEventListener('click', () => {
-    // Clone canvas so we don't modify the on-screen preview
-    const tempCanvas = document.createElement('canvas');
-    tempCanvas.width = canvas.width;
-    tempCanvas.height = canvas.height;
-    const tempCtx = tempCanvas.getContext('2d');
-
-    // Copy the existing canvas content
-    tempCtx.drawImage(canvas, 0, 0);
-
-    // Add the watermark to the new canvas
-    tempCtx.font = "30px Arial";
-    tempCtx.fillStyle = "rgba(255, 255, 255, 0.5)"; // ✅ White with 50% transparency
-    const watermarkText = "@connorfabiano";
-    const textWidth = tempCtx.measureText(watermarkText).width;
-    const xPos = tempCanvas.width - textWidth - 20; // Bottom-right
-    const yPos = tempCanvas.height - 20;
-    tempCtx.fillText(watermarkText, xPos, yPos);
-
-    // Convert to JPEG and download
-    const imageURL = tempCanvas.toDataURL("image/jpeg", 0.9);
+    const imageURL = canvas.toDataURL("image/jpeg", 0.9);
     const link = document.createElement('a');
     link.href = imageURL;
     link.download = 'meme.jpg';
     link.click();
 });
 
-// Reset editor
-newImageBtn.addEventListener('click', resetEditor);
 
-function resetEditor() {
-    image = null;
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    canvasContainer.style.display = 'none';
-    line1Controls.style.display = 'none';
-    line2Controls.style.display = 'none';
-    downloadBtn.style.display = 'none';
-    newImageBtn.style.display = 'none';
-    uploadArea.style.display = 'block';
-    textData.line1 = { ...textData.line1, text: 'LINE 1 EXAMPLE' };
-    textData.line2 = { ...textData.line2, text: 'LINE 2 EXAMPLE' };
-}
+
+// New Image Button
+newImageBtn.addEventListener('click', resetEditor);
