@@ -205,7 +205,7 @@ function drawCanvas() {
 // Draw text line (used for all text including footer)
 function drawTextLine(line) {
     if (line.text.trim()) {
-        ctx.font = ${line.size}px ${line.font};
+        ctx.font = `${line.size}px ${line.font}`; // Fixed template literal
         ctx.textAlign = "center";  // Center the text horizontally
         const displayText = line.uppercase ? line.text.toUpperCase() : line.text;
 
@@ -287,7 +287,7 @@ canvas.addEventListener('mouseup', () => {
 
 // Updated hit detection: now uses the same display text as drawn
 function isMouseOverText(x, y, line) {
-    ctx.font = ${line.size}px ${line.font};
+    ctx.font = `${line.size}px ${line.font}`; // Fixed template literal
     ctx.textAlign = "center";
     const displayText = line.uppercase ? line.text.toUpperCase() : line.text;
     const textWidth = ctx.measureText(displayText).width;
@@ -299,7 +299,6 @@ function isMouseOverText(x, y, line) {
     const bottom = line.y;
     return x > left && x < right && y > top && y < bottom;
 }
-
 
 downloadBtn.addEventListener('click', () => {
     // Ensure no element is being dragged before download
@@ -314,7 +313,6 @@ downloadBtn.addEventListener('click', () => {
     link.download = 'meme.jpg';
     link.click();
 });
-
 
 // New Image Button
 newImageBtn.addEventListener('click', resetEditor);
