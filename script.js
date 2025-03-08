@@ -56,9 +56,9 @@ let textData = {
         y: 0,        // y position will be set on image load to position at bottom left
         color: '#FFFFFF',
         font: 'Arial', // fixed to Arial
-        size: 30,
-        uppercase: true,
-        outline: true,
+        size: 20,
+        uppercase: false,
+        outline: false,
     },
 };
 
@@ -159,13 +159,13 @@ function loadImage(file) {
                 canvas.width = canvas.height * aspectRatio;
             }
             
-            // Update text positions
+            // Update text positions to be centered relative to the canvas
             textData.line1.x = canvas.width / 2;
             textData.line1.y = canvas.height * 0.15;  // 15% from the top
             textData.line2.x = canvas.width / 2;
             textData.line2.y = canvas.height * 0.85;  // 85% from the top
-            textData.footer.x = 10;                   // Fixed left position
-            textData.footer.y = canvas.height - 10;   // 10px from bottom
+            textData.footer.x = canvas.width / 2;
+            textData.footer.y = canvas.height - 20;   // 20px above the bottom
 
             drawCanvas();
             showCanvasAndControls();
@@ -191,9 +191,10 @@ function drawCanvas() {
         ctx.drawImage(image, 0, 0, canvas.width, canvas.height);
     }
 
-    // Force footer to bottom left (override any dragging)
-    textData.footer.x = 10;
-    textData.footer.y = canvas.height - 10;
+    // Set default footer position if not yet initialized (places it near bottom left)
+    if (textData.footer.y === 0) {
+        textData.footer.y = canvas.height - 10;
+    }
 
     // Draw the text lines
     drawTextLine(textData.line1);
@@ -204,16 +205,9 @@ function drawCanvas() {
 // Draw text line (used for all text including footer)
 function drawTextLine(line) {
     if (line.text.trim()) {
-        ctx.font = `${line.size}px ${line.font}`;
-        ctx.textAlign = "center";  // Center for line1 and line2, we’ll adjust for footer below
-        
-        let displayText;
-        if (line === textData.footer) {
-            displayText = 'GIFit.net';  // Hardcode exact text for footer to guarantee case
-            ctx.textAlign = "left";     // Left-align footer at x: 10
-        } else {
-            displayText = line.uppercase ? line.text.toUpperCase() : line.text;
-        }
+        ctx.font = ${line.size}px ${line.font};
+        ctx.textAlign = "center";  // Center the text horizontally
+        const displayText = line.uppercase ? line.text.toUpperCase() : line.text;
 
         // Draw outline first if enabled
         if (line.outline) {
