@@ -51,7 +51,7 @@ let textData = {
         outlineColor: '#000000', // Black outline
     },
     footer: {
-        text: 'gifit.net',
+        text: 'GIFit.net',
         x: 10,       // initial x position (left side)
         y: 0,        // y position will be set on image load to position at bottom left
         color: '#FFFFFF',
