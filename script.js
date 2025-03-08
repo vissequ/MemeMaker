@@ -56,9 +56,9 @@ let textData = {
         y: 0,        // y position will be set on image load to position at bottom left
         color: '#FFFFFF',
         font: 'Arial', // fixed to Arial
-        size: 20,
-        uppercase: false,
-        outline: false,
+        size: 30,
+        uppercase: true,
+        outline: true,
     },
 };
 
