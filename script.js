@@ -57,7 +57,7 @@ let textData = {
         color: '#FFFFFF',
         font: 'Arial', // fixed to Arial
         size: 20,
-        uppercase: false,
+        // uppercase: false,
         outline: false,
     },
 };
