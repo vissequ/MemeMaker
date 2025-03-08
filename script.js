@@ -57,6 +57,7 @@ let textData = {
         color: '#FFFFFF',
         font: 'Arial', // fixed to Arial
         size: 20,
+        uppercase: false,
         outline: false,
     },
 };
@@ -202,40 +203,24 @@ function drawCanvas() {
 }
 
 // Draw text line (used for all text including footer)
-function drawText() {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
+function drawTextLine(line) {
+    if (line.text.trim()) {
+        ctx.font = ${line.size}px ${line.font};
+        ctx.textAlign = "center";  // Center the text horizontally
+        const displayText = line.uppercase ? line.text.toUpperCase() : line.text;
 
-    if (image) {
-        ctx.drawImage(image, 0, 0, canvas.width, canvas.height);
-    }
-
-    function renderText(line, forceText = null) {
-        let text = forceText !== null ? forceText : 
-                   (textData[line].uppercase ? textData[line].text.toUpperCase() : textData[line].text.toLowerCase());
-        let { x, y, color, font, size, outline, outlineColor } = textData[line];
-
-        ctx.font = `${size}px ${font}`;
-        ctx.fillStyle = color;
-        ctx.textAlign = "center";
-        ctx.textBaseline = "middle";
-
-        if (outline) {
-            ctx.strokeStyle = outlineColor;
-            ctx.lineWidth = 5;
-            ctx.strokeText(text, x, y);
+        // Draw outline first if enabled
+        if (line.outline) {
+            ctx.strokeStyle = line.outlineColor;
+            ctx.lineWidth = 4;
+            ctx.strokeText(displayText, line.x, line.y);
         }
-        ctx.fillText(text, x, y);
+
+        // Fill text color
+        ctx.fillStyle = line.color;
+        ctx.fillText(displayText, line.x, line.y);
     }
-
-    // Render first two lines with case toggle applied
-    renderText('line1');
-    renderText('line2');
-
-    // Render the footer without case transformation
-    renderText('footer', 'GIFit');
 }
-
-
 
 // Event listeners for live updates (for editable lines only)
 function addLiveUpdateListeners(lineKey, textInput, fontSelector, fontSizeInput, colorPicker, outlineToggle, outlineColorPicker, caseToggle) {
@@ -302,7 +287,7 @@ canvas.addEventListener('mouseup', () => {
 
 // Updated hit detection: now uses the same display text as drawn
 function isMouseOverText(x, y, line) {
-    ctx.font = `${line.size}px ${line.font}`;
+    ctx.font = ${line.size}px ${line.font};
     ctx.textAlign = "center";
     const displayText = line.uppercase ? line.text.toUpperCase() : line.text;
     const textWidth = ctx.measureText(displayText).width;
