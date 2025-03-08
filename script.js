@@ -205,11 +205,9 @@ function drawCanvas() {
 // Draw text line (used for all text including footer)
 function drawTextLine(line) {
     if (line.text.trim()) {
-        ctx.font = `${line.size}px ${line.font}`;
+        ctx.font = ${line.size}px ${line.font};
         ctx.textAlign = "center";  // Center the text horizontally
-        
-        // Use raw text for footer, otherwise apply uppercase logic
-        const displayText = (line === textData.footer) ? line.text : (line.uppercase ? line.text.toUpperCase() : line.text);
+        const displayText = line.uppercase ? line.text.toUpperCase() : line.text;
 
         // Draw outline first if enabled
         if (line.outline) {
