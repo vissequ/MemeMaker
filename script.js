@@ -267,7 +267,7 @@ function drawCanvas() {
 // Draw text line
 function drawTextLine(line) {
     if (line.text.trim()) {
-        ctx.font = `${line.size}px ${line.font}`;
+        // ctx.font = `${line.size}px ${line.font}`;
         ctx.textAlign = "center";
         const displayText = line.uppercase ? line.text.toUpperCase() : line.text;
 
