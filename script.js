@@ -368,11 +368,22 @@ function isMouseOverText(x, y, line) {
 downloadBtn.addEventListener('click', () => {
     draggingLine = null;
     drawCanvas();
-    const dataURL = canvas.toDataURL('image/jpeg');
-    const link = document.createElement('a');
-    link.href = dataURL;
-    link.download = 'meme.jpg';
-    link.click();
+
+    const gif = new GIF({
+        workers: 2,
+        quality: 10,
+        workerScript: 'gif.worker.js',
+    });
+
+    gif.addFrame(canvas, { delay: 200 });
+    gif.on('finished', (blob) => {
+        const link = document.createElement('a');
+        link.href = URL.createObjectURL(blob);
+        link.download = 'meme.gif';
+        link.click();
+    });
+
+    gif.render();
 });
 
 newImageBtn.addEventListener('click', resetEditor);
