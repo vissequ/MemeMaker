@@ -57,7 +57,6 @@ let textData = {
         color: '#FFFFFF',
         font: 'Arial', // fixed to Arial
         size: 20,
-        // uppercase: false,
         outline: false,
     },
 };
@@ -202,35 +201,14 @@ function drawCanvas() {
     drawTextLine(textData.footer);
 }
 
-// // Draw text line (used for all text including footer)
-// function drawTextLine(line) {
-//     if (line.text.trim()) {
-//         ctx.font = `${line.size}px ${line.font}`;
-//         ctx.textAlign = "center";  // Center the text horizontally
-//         const displayText = line.uppercase ? line.text.toUpperCase() : line.text;
-
-//         // Draw outline first if enabled
-//         if (line.outline) {
-//             ctx.strokeStyle = line.outlineColor;
-//             ctx.lineWidth = 4;
-//             ctx.strokeText(displayText, line.x, line.y);
-//         }
-
-//         // Fill text color
-//         ctx.fillStyle = line.color;
-//         ctx.fillText(displayText, line.x, line.y);
-//     }
-// }
-
+// Draw text line (used for all text including footer)
 function drawText() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
-    
-    // Draw uploaded image first
+
     if (image) {
         ctx.drawImage(image, 0, 0, canvas.width, canvas.height);
     }
 
-    // Function to render text with outline
     function renderText(line) {
         let text = textData[line].uppercase ? textData[line].text.toUpperCase() : textData[line].text.toLowerCase();
         let { x, y, color, font, size, outline, outlineColor } = textData[line];
@@ -248,16 +226,17 @@ function drawText() {
         ctx.fillText(text, x, y);
     }
 
-    // Render first two lines with case toggles
+    // Render the first two lines with case toggle applied
     renderText('line1');
     renderText('line2');
 
-    // Render the footer separately without case transformation
-    ctx.font = `50px Impact`;  // Adjust size and font as needed
-    ctx.fillStyle = '#FFFFFF';
+    // Render the footer with exact case
+    let footer = textData.footer;
+    ctx.font = `${footer.size}px ${footer.font}`;
+    ctx.fillStyle = footer.color;
     ctx.textAlign = "center";
     ctx.textBaseline = "bottom";
-    ctx.fillText("GIFit", canvas.width / 2, canvas.height - 30);
+    ctx.fillText(footer.text, footer.x, footer.y);
 }
 
 
