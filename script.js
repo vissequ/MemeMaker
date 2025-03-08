@@ -209,8 +209,9 @@ function drawText() {
         ctx.drawImage(image, 0, 0, canvas.width, canvas.height);
     }
 
-    function renderText(line) {
-        let text = textData[line].uppercase ? textData[line].text.toUpperCase() : textData[line].text.toLowerCase();
+    function renderText(line, forceText = null) {
+        let text = forceText !== null ? forceText : 
+                   (textData[line].uppercase ? textData[line].text.toUpperCase() : textData[line].text.toLowerCase());
         let { x, y, color, font, size, outline, outlineColor } = textData[line];
 
         ctx.font = `${size}px ${font}`;
@@ -226,18 +227,14 @@ function drawText() {
         ctx.fillText(text, x, y);
     }
 
-    // Render the first two lines with case toggle applied
+    // Render first two lines with case toggle applied
     renderText('line1');
     renderText('line2');
 
-    // Render the footer with exact case
-    let footer = textData.footer;
-    ctx.font = `${footer.size}px ${footer.font}`;
-    ctx.fillStyle = footer.color;
-    ctx.textAlign = "center";
-    ctx.textBaseline = "bottom";
-    ctx.fillText(footer.text, footer.x, footer.y);
+    // Render the footer without case transformation
+    renderText('footer', 'GIFit');
 }
+
 
 
 // Event listeners for live updates (for editable lines only)
