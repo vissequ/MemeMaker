@@ -51,7 +51,7 @@ let textData = {
         outlineColor: '#000000', // Black outline
     },
     footer: {
-        text: 'dontcensor.us',
+        text: 'gifit.net',
         x: 10,       // initial x position (left side)
         y: 0,        // y position will be set on image load to position at bottom left
         color: '#FFFFFF',
