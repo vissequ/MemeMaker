@@ -6,63 +6,101 @@ const ctx = canvas.getContext('2d');
 
 const line1Controls = document.getElementById('line1-controls');
 const line2Controls = document.getElementById('line2-controls');
+const line3Controls = document.getElementById('line3-controls');
+const line4Controls = document.getElementById('line4-controls');
 const textInput1 = document.getElementById('text-input-1');
 const textInput2 = document.getElementById('text-input-2');
+const textInput3 = document.getElementById('text-input-3');
+const textInput4 = document.getElementById('text-input-4');
 const fontSelector1 = document.getElementById('font-selector-1');
 const fontSelector2 = document.getElementById('font-selector-2');
+const fontSelector3 = document.getElementById('font-selector-3');
+const fontSelector4 = document.getElementById('font-selector-4');
 const fontSizeInput1 = document.getElementById('font-size-1');
 const fontSizeInput2 = document.getElementById('font-size-2');
+const fontSizeInput3 = document.getElementById('font-size-3');
+const fontSizeInput4 = document.getElementById('font-size-4');
 const colorPicker1 = document.getElementById('color-picker-1');
 const colorPicker2 = document.getElementById('color-picker-2');
+const colorPicker3 = document.getElementById('color-picker-3');
+const colorPicker4 = document.getElementById('color-picker-4');
 const outlineToggle1 = document.getElementById('outline-toggle-1');
 const outlineToggle2 = document.getElementById('outline-toggle-2');
+const outlineToggle3 = document.getElementById('outline-toggle-3');
+const outlineToggle4 = document.getElementById('outline-toggle-4');
 const outlineColorPicker1 = document.getElementById('outline-color-picker-1');
 const outlineColorPicker2 = document.getElementById('outline-color-picker-2');
+const outlineColorPicker3 = document.getElementById('outline-color-picker-3');
+const outlineColorPicker4 = document.getElementById('outline-color-picker-4');
 const caseToggle1 = document.getElementById('case-toggle-1');
 const caseToggle2 = document.getElementById('case-toggle-2');
+const caseToggle3 = document.getElementById('case-toggle-3');
+const caseToggle4 = document.getElementById('case-toggle-4');
 const downloadBtn = document.getElementById('download-btn');
 const newImageBtn = document.getElementById('new-image-btn');
 
 let image = null;
 let draggingLine = null;
 
-// Updated default settings including the new non-editable footer
+// Updated default settings including new lines with empty text
 let textData = {
     line1: {
         text: 'LINE 1 EXAMPLE',
         x: 50,
         y: 100,
-        color: '#FFFFFF', // White font
+        color: '#FFFFFF',
         font: 'Impact',
         size: 60,
         uppercase: true,
-        outline: true, // Outline enabled
-        outlineColor: '#000000', // Black outline
+        outline: true,
+        outlineColor: '#000000',
     },
     line2: {
         text: 'LINE 2 EXAMPLE',
         x: 50,
         y: 200,
-        color: '#FFFFFF', // White font
+        color: '#FFFFFF',
         font: 'Impact',
         size: 60,
         uppercase: true,
-        outline: true, // Outline enabled
-        outlineColor: '#000000', // Black outline
+        outline: true,
+        outlineColor: '#000000',
+    },
+    line3: {
+        text: '',
+        x: 50,
+        y: 300,
+        color: '#FFFFFF',
+        font: 'Impact',
+        size: 60,
+        uppercase: true,
+        outline: true,
+        outlineColor: '#000000',
+    },
+    line4: {
+        text: '',
+        x: 50,
+        y: 400,
+        color: '#FFFFFF',
+        font: 'Impact',
+        size: 60,
+        uppercase: true,
+        outline: true,
+        outlineColor: '#000000',
     },
     footer: {
-        text: 'GIFit.net',
-        x: 10,       // initial x position (left side)
-        y: 0,        // y position will be set on image load to position at bottom left
+        text: 'dontcensor.us',
+        x: 10,
+        y: 0,
         color: '#FFFFFF',
-        font: 'Arial', // fixed to Arial
+        font: 'Arial',
         size: 20,
         uppercase: false,
         outline: false,
     },
 };
 
-// Populate font options for both lines
+// Populate font options for all lines
 const fontOptions = [
     'Impact',
     'Arial',
@@ -84,23 +122,39 @@ function populateFontSelector(selector) {
 }
 populateFontSelector(fontSelector1);
 populateFontSelector(fontSelector2);
+populateFontSelector(fontSelector3);
+populateFontSelector(fontSelector4);
 
 // Set default values in the controls
 function setDefaultControlValues() {
     fontSelector1.value = 'Impact';
     fontSelector2.value = 'Impact';
+    fontSelector3.value = 'Impact';
+    fontSelector4.value = 'Impact';
     fontSizeInput1.value = 60;
     fontSizeInput2.value = 60;
+    fontSizeInput3.value = 60;
+    fontSizeInput4.value = 60;
     colorPicker1.value = '#FFFFFF';
     colorPicker2.value = '#FFFFFF';
+    colorPicker3.value = '#FFFFFF';
+    colorPicker4.value = '#FFFFFF';
     outlineToggle1.checked = true;
     outlineToggle2.checked = true;
+    outlineToggle3.checked = true;
+    outlineToggle4.checked = true;
     outlineColorPicker1.value = '#000000';
     outlineColorPicker2.value = '#000000';
+    outlineColorPicker3.value = '#000000';
+    outlineColorPicker4.value = '#000000';
     caseToggle1.checked = true;
     caseToggle2.checked = true;
+    caseToggle3.checked = true;
+    caseToggle4.checked = true;
     textInput1.value = 'LINE 1 EXAMPLE';
     textInput2.value = 'LINE 2 EXAMPLE';
+    textInput3.value = '';
+    textInput4.value = '';
 }
 setDefaultControlValues();
 
@@ -109,6 +163,8 @@ function showCanvasAndControls() {
     canvasContainer.style.display = 'block';
     line1Controls.style.display = 'block';
     line2Controls.style.display = 'block';
+    line3Controls.style.display = 'block';
+    line4Controls.style.display = 'block';
     downloadBtn.style.display = 'block';
     uploadArea.style.display = 'none';
     newImageBtn.style.display = 'block';
@@ -121,12 +177,15 @@ function resetEditor() {
     canvasContainer.style.display = 'none';
     line1Controls.style.display = 'none';
     line2Controls.style.display = 'none';
+    line3Controls.style.display = 'none';
+    line4Controls.style.display = 'none';
     downloadBtn.style.display = 'none';
     newImageBtn.style.display = 'none';
     uploadArea.style.display = 'block';
     textData.line1 = { ...textData.line1, text: 'LINE 1 EXAMPLE' };
     textData.line2 = { ...textData.line2, text: 'LINE 2 EXAMPLE' };
-    // Do not reset the footer text or its position, so it remains non-editable.
+    textData.line3 = { ...textData.line3, text: '' };
+    textData.line4 = { ...textData.line4, text: '' };
     setDefaultControlValues();
 }
 
@@ -149,7 +208,6 @@ function loadImage(file) {
         image = new Image();
         image.src = e.target.result;
         image.onload = () => {
-            // Set canvas dimensions based on image dimensions
             const aspectRatio = image.width / image.height;
             if (image.width > image.height) {
                 canvas.width = 800;
@@ -159,13 +217,17 @@ function loadImage(file) {
                 canvas.width = canvas.height * aspectRatio;
             }
             
-            // Update text positions to be centered relative to the canvas
+            // Update text positions
             textData.line1.x = canvas.width / 2;
-            textData.line1.y = canvas.height * 0.15;  // 15% from the top
+            textData.line1.y = canvas.height * 0.15;
             textData.line2.x = canvas.width / 2;
-            textData.line2.y = canvas.height * 0.85;  // 85% from the top
+            textData.line2.y = canvas.height * 0.85;
+            textData.line3.x = canvas.width / 2;
+            textData.line3.y = canvas.height * 0.35;
+            textData.line4.x = canvas.width / 2;
+            textData.line4.y = canvas.height * 0.65;
             textData.footer.x = canvas.width / 2;
-            textData.footer.y = canvas.height - 20;   // 20px above the bottom
+            textData.footer.y = canvas.height - 20;
 
             drawCanvas();
             showCanvasAndControls();
@@ -178,7 +240,6 @@ function loadImage(file) {
 function drawCanvas() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-    // Draw the image
     if (image) {
         const aspectRatio = image.width / image.height;
         if (image.width > image.height) {
@@ -191,38 +252,37 @@ function drawCanvas() {
         ctx.drawImage(image, 0, 0, canvas.width, canvas.height);
     }
 
-    // Set default footer position if not yet initialized (places it near bottom left)
     if (textData.footer.y === 0) {
         textData.footer.y = canvas.height - 10;
     }
 
-    // Draw the text lines
+    // Draw all text lines
     drawTextLine(textData.line1);
     drawTextLine(textData.line2);
+    drawTextLine(textData.line3);
+    drawTextLine(textData.line4);
     drawTextLine(textData.footer);
 }
 
-// Draw text line (used for all text including footer)
+// Draw text line
 function drawTextLine(line) {
     if (line.text.trim()) {
-        ctx.font = `${line.size}px ${line.font}`; // Fixed template literal
-        ctx.textAlign = "center";  // Center the text horizontally
+        ctx.font = `${line.size}px ${line.font}`;
+        ctx.textAlign = "center";
         const displayText = line.uppercase ? line.text.toUpperCase() : line.text;
 
-        // Draw outline first if enabled
         if (line.outline) {
             ctx.strokeStyle = line.outlineColor;
             ctx.lineWidth = 4;
             ctx.strokeText(displayText, line.x, line.y);
         }
 
-        // Fill text color
         ctx.fillStyle = line.color;
         ctx.fillText(displayText, line.x, line.y);
     }
 }
 
-// Event listeners for live updates (for editable lines only)
+// Event listeners for live updates
 function addLiveUpdateListeners(lineKey, textInput, fontSelector, fontSizeInput, colorPicker, outlineToggle, outlineColorPicker, caseToggle) {
     textInput.addEventListener('input', (e) => {
         textData[lineKey].text = e.target.value;
@@ -255,11 +315,13 @@ function addLiveUpdateListeners(lineKey, textInput, fontSelector, fontSizeInput,
     });
 }
 
-// Add live update listeners for both editable lines (footer remains non-editable)
+// Add listeners for all editable lines
 addLiveUpdateListeners('line1', textInput1, fontSelector1, fontSizeInput1, colorPicker1, outlineToggle1, outlineColorPicker1, caseToggle1);
 addLiveUpdateListeners('line2', textInput2, fontSelector2, fontSizeInput2, colorPicker2, outlineToggle2, outlineColorPicker2, caseToggle2);
+addLiveUpdateListeners('line3', textInput3, fontSelector3, fontSizeInput3, colorPicker3, outlineToggle3, outlineColorPicker3, caseToggle3);
+addLiveUpdateListeners('line4', textInput4, fontSelector4, fontSizeInput4, colorPicker4, outlineToggle4, outlineColorPicker4, caseToggle4);
 
-// Dragging logic for text (now includes footer)
+// Dragging logic
 canvas.addEventListener('mousedown', (e) => {
     const rect = canvas.getBoundingClientRect();
     const x = e.clientX - rect.left;
@@ -269,6 +331,10 @@ canvas.addEventListener('mousedown', (e) => {
         draggingLine = textData.line1;
     } else if (isMouseOverText(x, y, textData.line2)) {
         draggingLine = textData.line2;
+    } else if (isMouseOverText(x, y, textData.line3)) {
+        draggingLine = textData.line3;
+    } else if (isMouseOverText(x, y, textData.line4)) {
+        draggingLine = textData.line4;
     } else if (isMouseOverText(x, y, textData.footer)) {
         draggingLine = textData.footer;
     }
@@ -285,14 +351,13 @@ canvas.addEventListener('mouseup', () => {
     draggingLine = null;
 });
 
-// Updated hit detection: now uses the same display text as drawn
+// Hit detection
 function isMouseOverText(x, y, line) {
-    ctx.font = `${line.size}px ${line.font}`; // Fixed template literal
+    ctx.font = `${line.size}px ${line.font}`;
     ctx.textAlign = "center";
     const displayText = line.uppercase ? line.text.toUpperCase() : line.text;
     const textWidth = ctx.measureText(displayText).width;
-    const textHeight = line.size; // approximate height
-    // For centered text, adjust the boundaries accordingly:
+    const textHeight = line.size;
     const left = line.x - textWidth / 2;
     const right = line.x + textWidth / 2;
     const top = line.y - textHeight;
@@ -301,12 +366,8 @@ function isMouseOverText(x, y, line) {
 }
 
 downloadBtn.addEventListener('click', () => {
-    // Ensure no element is being dragged before download
     draggingLine = null;
-    // Redraw the canvas to capture the latest state
     drawCanvas();
-
-    // Convert canvas to a JPEG data URL
     const dataURL = canvas.toDataURL('image/jpeg');
     const link = document.createElement('a');
     link.href = dataURL;
@@ -314,5 +375,4 @@ downloadBtn.addEventListener('click', () => {
     link.click();
 });
 
-// New Image Button
 newImageBtn.addEventListener('click', resetEditor);
