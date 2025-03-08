@@ -202,25 +202,64 @@ function drawCanvas() {
     drawTextLine(textData.footer);
 }
 
-// Draw text line (used for all text including footer)
-function drawTextLine(line) {
-    if (line.text.trim()) {
-        ctx.font = `${line.size}px ${line.font}`;
-        ctx.textAlign = "center";  // Center the text horizontally
-        const displayText = line.uppercase ? line.text.toUpperCase() : line.text;
+// // Draw text line (used for all text including footer)
+// function drawTextLine(line) {
+//     if (line.text.trim()) {
+//         ctx.font = `${line.size}px ${line.font}`;
+//         ctx.textAlign = "center";  // Center the text horizontally
+//         const displayText = line.uppercase ? line.text.toUpperCase() : line.text;
 
-        // Draw outline first if enabled
-        if (line.outline) {
-            ctx.strokeStyle = line.outlineColor;
-            ctx.lineWidth = 4;
-            ctx.strokeText(displayText, line.x, line.y);
-        }
+//         // Draw outline first if enabled
+//         if (line.outline) {
+//             ctx.strokeStyle = line.outlineColor;
+//             ctx.lineWidth = 4;
+//             ctx.strokeText(displayText, line.x, line.y);
+//         }
 
-        // Fill text color
-        ctx.fillStyle = line.color;
-        ctx.fillText(displayText, line.x, line.y);
+//         // Fill text color
+//         ctx.fillStyle = line.color;
+//         ctx.fillText(displayText, line.x, line.y);
+//     }
+// }
+
+function drawText() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    
+    // Draw uploaded image first
+    if (image) {
+        ctx.drawImage(image, 0, 0, canvas.width, canvas.height);
     }
+
+    // Function to render text with outline
+    function renderText(line) {
+        let text = textData[line].uppercase ? textData[line].text.toUpperCase() : textData[line].text.toLowerCase();
+        let { x, y, color, font, size, outline, outlineColor } = textData[line];
+
+        ctx.font = `${size}px ${font}`;
+        ctx.fillStyle = color;
+        ctx.textAlign = "center";
+        ctx.textBaseline = "middle";
+
+        if (outline) {
+            ctx.strokeStyle = outlineColor;
+            ctx.lineWidth = 5;
+            ctx.strokeText(text, x, y);
+        }
+        ctx.fillText(text, x, y);
+    }
+
+    // Render first two lines with case toggles
+    renderText('line1');
+    renderText('line2');
+
+    // Render the footer separately without case transformation
+    ctx.font = `50px Impact`;  // Adjust size and font as needed
+    ctx.fillStyle = '#FFFFFF';
+    ctx.textAlign = "center";
+    ctx.textBaseline = "bottom";
+    ctx.fillText("GIFit", canvas.width / 2, canvas.height - 30);
 }
+
 
 // Event listeners for live updates (for editable lines only)
 function addLiveUpdateListeners(lineKey, textInput, fontSelector, fontSizeInput, colorPicker, outlineToggle, outlineColorPicker, caseToggle) {
